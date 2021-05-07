@@ -1,16 +1,16 @@
 import unittest
 import vk_api
-from functions import get_friends, list_of_mutual_friends, make_connection
+from bot import get_friends, list_of_mutual_friends, make_connection
 
 
 class Test(unittest.TestCase):
-    example = 279760424
-    guys = ['312653751', '279760424']
-
-    # paste your token
-    token = ""
-
     def setUp(self):
+        file = open('info_for_test.txt')
+        text = file.read().split('\n')
+        file.close()
+        self.token = text[0].split(':')[1].strip()
+        self.example = int(text[1].split(':')[1])
+        self.guys = list(map(int, text[2].split(':')[1].split(',')))
         self.connection = vk_api.VkApi(token=self.token)
 
     def test_make_connection(self):
@@ -22,7 +22,7 @@ class Test(unittest.TestCase):
         self.assertIsInstance(x, set)
 
     def test_list_of_mutual_friends(self):
-        x = list_of_mutual_friends(self.connection, self.guys)
+        x = list_of_mutual_friends(self.connection, list(map(str, self.guys)))
         self.assertIsInstance(x, list)
 
 
